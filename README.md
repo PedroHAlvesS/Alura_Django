@@ -1,2 +1,2 @@
-# Alura_Django
+# Alura Django
 Aprendendo Framework Django na Alura
