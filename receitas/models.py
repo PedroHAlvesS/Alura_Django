@@ -1,6 +1,6 @@
 from django.db import models
 from datetime import datetime
-from pessoas.models import Pessoas
+from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -10,7 +10,7 @@ class Receitas(models.Model):
         verbose_name = "Receita"
         verbose_name_plural = "Receitas"
 
-    publicado_por = models.ForeignKey(Pessoas, on_delete=models.CASCADE)
+    publicado_por = models.ForeignKey(User, on_delete=models.CASCADE)
     nome_da_receita = models.CharField(max_length=180)
     ingredientes = models.TextField()
     modo_de_preparo = models.TextField()
