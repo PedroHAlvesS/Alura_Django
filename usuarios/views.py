@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
-from django.contrib import auth
+from django.contrib import auth, messages
 from receitas.models import Receitas
 
 
@@ -31,7 +31,7 @@ def login(request):
         email = request.POST['email'].strip()
         senha = request.POST['senha'].strip()
         if email == "" or senha == "":
-            print("Campos não podem ser vazios!")
+            messages.error(request, "Campos não podem ser vazios!")
             return redirect(login)
         else:
             if User.objects.filter(email=email).exists():
@@ -39,11 +39,14 @@ def login(request):
                 user = auth.authenticate(request, username=nome, password=senha)
                 if user is not None:
                     auth.login(request, user)
-                    print("logado com sucesso!")
+                    messages.success(request, "logado com sucesso!")
                     return redirect(dashboard)
                 else:
-                    print("Erro ao logar!")
+                    messages.error(request, "Erro ao logar!")
                     return redirect(login)
+            else:
+                messages.error(request, "Usuário não encontrado!")
+                return redirect(login)
     return render(request, 'usuarios/login.html')
 
 
@@ -54,27 +57,27 @@ def cadastro(request):
         senha = request.POST['password'].strip()
         senha_confirmacao = request.POST['password2'].strip()
         if not nome:
-            print("Campo nome vazio!")
+            messages.error(request, "Campo nome vazio!")
             return redirect(cadastro)
         elif not email:
-            print("Campo email vazio!")
+            messages.error(request, "Campo email vazio!")
             return redirect(cadastro)
         elif not senha:
-            print("Campo senha vazia!")
+            messages.error(request, "Campo senha vazia!")
             return redirect(cadastro)
         elif not senha_confirmacao:
-            print("Campo senha de confirmação vazia!")
+            messages.error(request, "Campo senha de confirmação vazia!")
             return redirect(cadastro)
         elif senha != senha_confirmacao:
-            print("Senhas diferentes!")
+            messages.error(request, "Senhas diferentes!")
             return redirect(cadastro)
         else:
             if User.objects.filter(email=email).exists():
-                print('Usuário já cadastrado')
+                messages.error(request, 'Usuário já cadastrado')
                 return redirect('cadastro')
             user = User.objects.create_user(username=nome, email=email, password=senha)
             user.save()
-            print('Usuário cadastrado com sucesso')
+            messages.success(request, 'Usuário cadastrado com sucesso')
             return redirect(login)
     else:
         return render(request, 'usuarios/cadastro.html')
