@@ -6,10 +6,6 @@ from django.contrib.auth.models import User
 
 
 class Receitas(models.Model):
-    class Meta:
-        verbose_name = "Receita"
-        verbose_name_plural = "Receitas"
-
     publicado_por = models.ForeignKey(User, on_delete=models.CASCADE)
     nome_da_receita = models.CharField(max_length=180)
     ingredientes = models.TextField()
@@ -22,6 +18,10 @@ class Receitas(models.Model):
     publicar = models.BooleanField(default=False)
 
     objects = models.Manager()
+
+    class Meta:
+        verbose_name = "Receita"
+        verbose_name_plural = "Receitas"
 
     def __str__(self):
         return self.nome_da_receita
